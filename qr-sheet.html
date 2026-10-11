@@ -1,0 +1,427 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrimeEstate â€“ QR Code Sheet (Print & Share)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #f8fafc;
+      padding: 24px 16px;
+    }
+
+    /* Print styles */
+    @media print {
+      body { background: white; padding: 0; }
+      .no-print { display: none !important; }
+      .page { box-shadow: none !important; margin: 0 !important; padding: 20px !important; }
+      .qr-grid { break-inside: avoid; }
+    }
+
+    /* Top action bar */
+    .no-print {
+      max-width: 860px;
+      margin: 0 auto 20px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+    }
+    .btn-primary { background: #1d4ed8; color: white; }
+    .btn-success { background: #16a34a; color: white; }
+    .btn-outline { background: white; color: #374151; border: 1.5px solid #d1d5db; }
+    .url-box {
+      background: #f1f5f9;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 12px;
+      color: #374151;
+      font-family: monospace;
+      flex: 1;
+      min-width: 200px;
+    }
+    .url-box strong { color: #1d4ed8; }
+
+    /* Main page */
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    /* Header */
+    .page-header {
+      background: linear-gradient(135deg, #0f2463, #1d4ed8, #3b82f6);
+      color: white;
+      padding: 32px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .ph-left .company { font-size: 22px; font-weight: 900; }
+    .ph-left .tagline { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+    .ph-right { text-align: right; }
+    .ph-right .doc-label { font-size: 11px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+    .ph-right .doc-id { font-size: 14px; font-weight: 700; margin-top: 4px; }
+    .ph-right .doc-date { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+
+    /* Intro strip */
+    .intro-strip {
+      background: #f0f9ff;
+      border-bottom: 2px solid #bae6fd;
+      padding: 14px 36px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #0c4a6e;
+    }
+    .intro-strip .icon { font-size: 18px; }
+
+    /* QR Grid */
+    .qr-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .qr-cell {
+      border: 1px solid #e5e7eb;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+    .qr-cell:nth-child(1) { border-left: none; border-top: none; }
+    .qr-cell:nth-child(2) { border-right: none; border-top: none; }
+    .qr-cell:nth-child(3) { border-left: none; border-bottom: none; }
+    .qr-cell:nth-child(4) { border-right: none; border-bottom: none; }
+
+    /* Color accent strip at top of each cell */
+    .qr-cell::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      border-radius: 0;
+    }
+    .qr-cell.blue::before { background: linear-gradient(90deg, #1d4ed8, #60a5fa); }
+    .qr-cell.purple::before { background: linear-gradient(90deg, #5b21b6, #a78bfa); }
+    .qr-cell.green::before { background: linear-gradient(90deg, #065f46, #34d399); }
+    .qr-cell.red::before { background: linear-gradient(90deg, #7c2d12, #f87171); }
+
+    .property-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .badge-blue { background: #dbeafe; color: #1d4ed8; }
+    .badge-purple { background: #ede9fe; color: #5b21b6; }
+    .badge-green { background: #d1fae5; color: #065f46; }
+    .badge-red { background: #fee2e2; color: #7c2d12; }
+
+    .qr-img-wrap {
+      background: white;
+      border: 3px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .qr-img-wrap img {
+      width: 165px;
+      height: 165px;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .property-num {
+      font-size: 20px;
+      font-weight: 900;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+    .property-type {
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .owner-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    .owner-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: white;
+    }
+    .av-blue { background: linear-gradient(135deg, #1d4ed8, #60a5fa); }
+    .av-purple { background: linear-gradient(135deg, #5b21b6, #a78bfa); }
+    .av-green { background: linear-gradient(135deg, #065f46, #34d399); }
+    .av-red { background: linear-gradient(135deg, #7c2d12, #f87171); }
+
+    .owner-name { font-size: 14px; font-weight: 700; color: #1e293b; }
+
+    .details-list {
+      width: 100%;
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 10px 14px;
+      text-align: left;
+      margin-bottom: 12px;
+    }
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .detail-item:last-child { border-bottom: none; }
+    .detail-item .dk { font-size: 10px; color: #94a3b8; font-weight: 600; }
+    .detail-item .dv { font-size: 11px; color: #334155; font-weight: 700; }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .status-pill .dot { width: 7px; height: 7px; border-radius: 50%; }
+    .pill-green { background: #dcfce7; color: #15803d; }
+    .pill-green .dot { background: #16a34a; }
+    .pill-yellow { background: #fef9c3; color: #a16207; }
+    .pill-yellow .dot { background: #ca8a04; }
+    .pill-red { background: #fee2e2; color: #b91c1c; }
+    .pill-red .dot { background: #dc2626; }
+
+    /* URL beneath QR */
+    .qr-url {
+      font-size: 9px;
+      color: #94a3b8;
+      word-break: break-all;
+      margin-top: 8px;
+      font-family: monospace;
+    }
+
+    /* Footer */
+    .page-footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 18px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .page-footer .verified {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(34,197,94,0.15);
+      color: #4ade80;
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      .qr-grid { grid-template-columns: 1fr; }
+      .page-header { flex-direction: column; text-align: center; }
+      .ph-right { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Action Bar (not printed) -->
+<div class="no-print">
+  <button class="btn btn-primary" onclick="window.print()">ðŸ–¨ï¸ Print QR Sheet</button>
+  <a href="index.html" class="btn btn-outline">â† Back to Portal</a>
+  <div class="url-box">ðŸŒ Public URL: <strong>https://qasimkhanfaridi.github.io/demoforGIGA</strong> &nbsp;|&nbsp; QR codes below are live & scannable from any phone</div>
+</div>
+
+<!-- Printable Page -->
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="ph-left">
+      <div class="company">ðŸ¢ PrimeEstate Developers</div>
+      <div class="tagline">Property Allotment Verification Portal â€” Scan to View Your Details</div>
+    </div>
+    <div class="ph-right">
+      <div class="doc-label">Demo Document</div>
+      <div class="doc-id">QR-DEMO-2026</div>
+      <div class="doc-date">Issued: Oct 11, 2026</div>
+    </div>
+  </div>
+
+  <!-- Intro -->
+  <div class="intro-strip">
+    <span class="icon">ðŸ“±</span>
+    <span>Open your phone camera, point at your QR code below, and tap the link to instantly view your complete property allotment details.</span>
+  </div>
+
+  <!-- 4 QR Codes in 2x2 Grid -->
+  <div class="qr-grid">
+
+    <!-- 1. Plot A-101 -->
+    <div class="qr-cell blue">
+      <div class="property-badge badge-blue">ðŸ  Residential Plot</div>
+      <div class="qr-img-wrap">
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=330x330&data=https://qasimkhanfaridi.github.io/demoforGIGA/property1.html&color=1e40af&bgcolor=ffffff&ecc=H&margin=2"
+          alt="QR â€“ Plot A-101"
+        />
+      </div>
+      <div class="property-num">Plot No. A-101</div>
+      <div class="property-type">Block A, Sector 7 Â· Lahore</div>
+      <div class="owner-row">
+        <div class="owner-avatar av-blue">ðŸ‘¤</div>
+        <div class="owner-name">Muhammad Ali Khan</div>
+      </div>
+      <div class="details-list">
+        <div class="detail-item"><span class="dk">Size</span><span class="dv">10 Marla Â· Corner</span></div>
+        <div class="detail-item"><span class="dk">Total Price</span><span class="dv">PKR 1.85 Crore</span></div>
+        <div class="detail-item"><span class="dk">Member ID</span><span class="dv">PED-2024-0011</span></div>
+      </div>
+      <div class="status-pill pill-green"><span class="dot"></span>Possession Transferred âœ…</div>
+      <div class="qr-url">https://qasimkhanfaridi.github.io/demoforGIGA/property1.html</div>
+    </div>
+
+    <!-- 2. Flat B-204 -->
+    <div class="qr-cell purple">
+      <div class="property-badge badge-purple">ðŸ™ï¸ Apartment</div>
+      <div class="qr-img-wrap">
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=330x330&data=https://qasimkhanfaridi.github.io/demoforGIGA/property2.html&color=5b21b6&bgcolor=ffffff&ecc=H&margin=2"
+          alt="QR â€“ Flat B-204"
+        />
+      </div>
+      <div class="property-num">Flat No. B-204</div>
+      <div class="property-type">Skyline Tower B Â· Islamabad</div>
+      <div class="owner-row">
+        <div class="owner-avatar av-purple">ðŸ‘¤</div>
+        <div class="owner-name">Sana Mirza</div>
+      </div>
+      <div class="details-list">
+        <div class="detail-item"><span class="dk">Size</span><span class="dv">1,250 sq.ft Â· 3 Bed</span></div>
+        <div class="detail-item"><span class="dk">Total Price</span><span class="dv">PKR 2.40 Crore</span></div>
+        <div class="detail-item"><span class="dk">Member ID</span><span class="dv">PED-2024-0047</span></div>
+      </div>
+      <div class="status-pill pill-yellow"><span class="dot"></span>Installment Active â€” 60% Paid</div>
+      <div class="qr-url">https://qasimkhanfaridi.github.io/demoforGIGA/property2.html</div>
+    </div>
+
+    <!-- 3. Shop C-08 -->
+    <div class="qr-cell green">
+      <div class="property-badge badge-green">ðŸª Commercial Shop</div>
+      <div class="qr-img-wrap">
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=330x330&data=https://qasimkhanfaridi.github.io/demoforGIGA/property3.html&color=065f46&bgcolor=ffffff&ecc=H&margin=2"
+          alt="QR â€“ Shop C-08"
+        />
+      </div>
+      <div class="property-num">Shop No. C-08</div>
+      <div class="property-type">Metro Business Square Â· Karachi</div>
+      <div class="owner-row">
+        <div class="owner-avatar av-green">ðŸ‘¤</div>
+        <div class="owner-name">Tariq Hassan</div>
+      </div>
+      <div class="details-list">
+        <div class="detail-item"><span class="dk">Size</span><span class="dv">450 sq.ft Â· Ground Floor</span></div>
+        <div class="detail-item"><span class="dk">Total Price</span><span class="dv">PKR 95 Lakh</span></div>
+        <div class="detail-item"><span class="dk">Member ID</span><span class="dv">PED-2023-0089</span></div>
+      </div>
+      <div class="status-pill pill-red"><span class="dot"></span>Payment Overdue âš ï¸</div>
+      <div class="qr-url">https://qasimkhanfaridi.github.io/demoforGIGA/property3.html</div>
+    </div>
+
+    <!-- 4. Villa D-15 -->
+    <div class="qr-cell red">
+      <div class="property-badge badge-red">ðŸ° Luxury Villa</div>
+      <div class="qr-img-wrap">
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=330x330&data=https://qasimkhanfaridi.github.io/demoforGIGA/property4.html&color=7c2d12&bgcolor=ffffff&ecc=H&margin=2"
+          alt="QR â€“ Villa D-15"
+        />
+      </div>
+      <div class="property-num">Villa No. D-15</div>
+      <div class="property-type">DHA Phase 8 Â· Lahore</div>
+      <div class="owner-row">
+        <div class="owner-avatar av-red">ðŸ‘¤</div>
+        <div class="owner-name">Dr. Farrukh Iqbal</div>
+      </div>
+      <div class="details-list">
+        <div class="detail-item"><span class="dk">Size</span><span class="dv">1 Kanal Â· 4,800 sq.ft</span></div>
+        <div class="detail-item"><span class="dk">Total Price</span><span class="dv">PKR 8.50 Crore</span></div>
+        <div class="detail-item"><span class="dk">Member ID</span><span class="dv">PED-2022-0003</span></div>
+      </div>
+      <div class="status-pill pill-green"><span class="dot"></span>Fully Registered & Possessed âœ…</div>
+      <div class="qr-url">https://qasimkhanfaridi.github.io/demoforGIGA/property4.html</div>
+    </div>
+
+  </div><!-- end qr-grid -->
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <div>
+      <div>PrimeEstate Developers Pvt. Ltd. | <strong style="color:#e2e8f0">www.primeestate.pk</strong></div>
+      <div style="margin-top:3px">ðŸ“ž +92-XX-XXXXXXX &nbsp;|&nbsp; ðŸ“§ info@primeestate.pk &nbsp;|&nbsp; Demo Document Â· Oct 2026</div>
+    </div>
+    <div class="verified">âœ… Verified Portal</div>
+  </div>
+
+</div>
+
+</body>
+</html>
+
+

@@ -1,0 +1,344 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrimeEstate Ã¢â‚¬â€œ QR Code Demo Portal</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #f1f5f9; min-height: 100vh; }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #1e3a8a, #1d4ed8, #2563eb);
+      padding: 40px 24px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .header .logo-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 16px; }
+    .header .logo-icon { font-size: 40px; }
+    .header h1 { font-size: 32px; font-weight: 900; letter-spacing: -0.5px; }
+    .header .tagline { font-size: 15px; opacity: 0.8; margin-top: 6px; }
+    .header .divider { width: 60px; height: 3px; background: rgba(255,255,255,0.4); border-radius: 2px; margin: 20px auto; }
+    .header .desc { font-size: 14px; opacity: 0.7; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+
+    /* Stats bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: #1e293b;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .stat { background: #1e293b; padding: 14px; text-align: center; }
+    .stat .s-num { font-size: 22px; font-weight: 800; color: #60a5fa; }
+    .stat .s-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+    /* Main content */
+    .main { padding: 28px 16px; max-width: 900px; margin: 0 auto; }
+    .section-title { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: #1e293b; }
+
+    /* QR Cards Grid */
+    .qr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+
+    @media (max-width: 500px) { .qr-grid { grid-template-columns: 1fr; } }
+
+    .qr-card {
+      background: #1e293b;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #334155;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .qr-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.4); }
+
+    .qr-card-header {
+      padding: 16px 16px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .qc-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .qc-title { font-size: 14px; font-weight: 700; color: #f1f5f9; }
+    .qc-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+
+    .qr-code-area {
+      background: white;
+      margin: 0 16px;
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qr-code-area img {
+      width: 100%;
+      max-width: 180px;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .qr-card-footer { padding: 12px 16px 16px; }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .status-badge .dot { width: 6px; height: 6px; border-radius: 50%; animation: blink 1.2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .badge-green { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .badge-green .dot { background: #4ade80; }
+    .badge-yellow { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+    .badge-yellow .dot { background: #fbbf24; }
+    .badge-red { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .badge-red .dot { background: #f87171; }
+
+    .open-btn {
+      display: block;
+      background: linear-gradient(135deg, var(--btn-from), var(--btn-to));
+      color: white;
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    /* Instructions */
+    .how-card {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid #334155;
+      margin-bottom: 16px;
+    }
+    .how-steps { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
+    .how-step { display: flex; gap: 12px; align-items: flex-start; }
+    .step-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0;
+    }
+    .step-text .s-title { font-size: 13px; font-weight: 600; color: #f1f5f9; }
+    .step-text .s-desc { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
+    /* Footer */
+    .footer { text-align: center; padding: 30px 16px; border-top: 1px solid #1e293b; font-size: 12px; color: #475569; }
+
+    /* Server tip */
+    .tip-box {
+      background: linear-gradient(135deg, #0c2340, #1e3a5f);
+      border: 1px solid #2563eb;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .tip-icon { font-size: 22px; flex-shrink: 0; }
+    .tip-text { font-size: 12px; color: #93c5fd; line-height: 1.6; }
+    .tip-text strong { color: #60a5fa; display: block; margin-bottom: 4px; }
+    code { background: #0f172a; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 11px; color: #7dd3fc; }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="logo-row">
+    <span class="logo-icon">Ã°Å¸ÂÂ¢</span>
+    <h1>PrimeEstate Developers</h1>
+  </div>
+  <div class="tagline">Property Allotment QR Code Portal</div>
+  <div class="divider"></div>
+  <div class="desc">Scan any QR code below to instantly view complete property allotment details, possession status, financial summary, location, and legal documents for your client.</div>
+</div>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat"><div class="s-num">4</div><div class="s-label">Properties</div></div>
+  <div class="stat"><div class="s-num">4</div><div class="s-label">QR Codes</div></div>
+  <div class="stat"><div class="s-num">3</div><div class="s-label">Cities</div></div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Tip -->
+  <div class="tip-box">
+    <div class="tip-icon">Ã°Å¸â€™Â¡</div>
+    <div class="tip-text">
+      <strong>How to make QR codes scannable on mobile phones:</strong>
+      Start the local server by running: <code>python -m http.server 8080</code> in this folder, then find your PC's local IP (e.g., 192.168.1.x). Replace <code>localhost</code> in QR code URLs with your IP so phones on the same WiFi can scan and open the pages directly.
+    </div>
+  </div>
+
+  <div class="section-title">Ã°Å¸â€œÂ± Scan QR Codes</div>
+
+  <!-- QR Grid -->
+  <div class="qr-grid">
+
+    <!-- Card 1 - Plot A-101 -->
+    <div class="qr-card">
+      <div class="qr-card-header">
+        <div class="qc-avatar" style="background: linear-gradient(135deg,#1e40af,#3b82f6)">Ã°Å¸ÂÂ </div>
+        <div>
+          <div class="qc-title">Plot A-101</div>
+          <div class="qc-sub">Muhammad Ali Khan Ã‚Â· Lahore</div>
+        </div>
+      </div>
+      <div class="qr-code-area">
+        <!-- QR code generated via goQR.me API pointing to local property1.html -->
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://qasimkhanfaridi.github.io/demoforGIGA/property1.html&color=1e40af&bgcolor=ffffff&ecc=H&margin=1"
+          alt="QR Code Ã¢â‚¬â€œ Plot A-101"
+          onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://qasimkhanfaridi.github.io/demoforGIGA/property1.html&ecc=H'"
+        />
+      </div>
+      <div class="qr-card-footer">
+        <span class="status-badge badge-green"><span class="dot"></span>Possession Transferred</span>
+        <div style="font-size:11px;color:#64748b">10 Marla Ã‚Â· Residential Ã‚Â· Block A</div>
+        <div style="font-size:11px;color:#64748b;margin-top:2px">Ã°Å¸â€™Â° PKR 1.85 Cr Ã‚Â· Fully Paid</div>
+        <a href="property1.html" class="open-btn" style="--btn-from:#1e40af;--btn-to:#3b82f6">Ã°Å¸â€â€” Open Property Page</a>
+      </div>
+    </div>
+
+    <!-- Card 2 - Flat B-204 -->
+    <div class="qr-card">
+      <div class="qr-card-header">
+        <div class="qc-avatar" style="background: linear-gradient(135deg,#5b21b6,#7c3aed)">Ã°Å¸Ââ„¢Ã¯Â¸Â</div>
+        <div>
+          <div class="qc-title">Flat B-204</div>
+          <div class="qc-sub">Sana Mirza Ã‚Â· Islamabad</div>
+        </div>
+      </div>
+      <div class="qr-code-area">
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://qasimkhanfaridi.github.io/demoforGIGA/property2.html&color=5b21b6&bgcolor=ffffff&ecc=H&margin=1"
+          alt="QR Code Ã¢â‚¬â€œ Flat B-204"
+        />
+      </div>
+      <div class="qr-card-footer">
+        <span class="status-badge badge-yellow"><span class="dot"></span>Installment Active</span>
+        <div style="font-size:11px;color:#64748b">1,250 sq.ft Ã‚Â· Apartment Ã‚Â· Tower B</div>
+        <div style="font-size:11px;color:#64748b;margin-top:2px">Ã°Å¸â€™Â° PKR 2.4 Cr Ã‚Â· 60% Paid</div>
+        <a href="property2.html" class="open-btn" style="--btn-from:#5b21b6;--btn-to:#7c3aed">Ã°Å¸â€â€” Open Property Page</a>
+      </div>
+    </div>
+
+    <!-- Card 3 - Shop C-08 -->
+    <div class="qr-card">
+      <div class="qr-card-header">
+        <div class="qc-avatar" style="background: linear-gradient(135deg,#065f46,#059669)">Ã°Å¸ÂÂª</div>
+        <div>
+          <div class="qc-title">Shop C-08</div>
+          <div class="qc-sub">Tariq Hassan Ã‚Â· Karachi</div>
+        </div>
+      </div>
+      <div class="qr-code-area">
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://qasimkhanfaridi.github.io/demoforGIGA/property3.html&color=065f46&bgcolor=ffffff&ecc=H&margin=1"
+          alt="QR Code Ã¢â‚¬â€œ Shop C-08"
+        />
+      </div>
+      <div class="qr-card-footer">
+        <span class="status-badge badge-red"><span class="dot"></span>Payment Overdue</span>
+        <div style="font-size:11px;color:#64748b">450 sq.ft Ã‚Â· Commercial Ã‚Â· G.Floor</div>
+        <div style="font-size:11px;color:#64748b;margin-top:2px">Ã°Å¸â€™Â° PKR 95 Lac Ã‚Â· 40% Paid</div>
+        <a href="property3.html" class="open-btn" style="--btn-from:#065f46;--btn-to:#059669">Ã°Å¸â€â€” Open Property Page</a>
+      </div>
+    </div>
+
+    <!-- Card 4 - Villa D-15 -->
+    <div class="qr-card">
+      <div class="qr-card-header">
+        <div class="qc-avatar" style="background: linear-gradient(135deg,#7c2d12,#dc2626)">Ã°Å¸ÂÂ°</div>
+        <div>
+          <div class="qc-title">Villa D-15</div>
+          <div class="qc-sub">Dr. Farrukh Iqbal Ã‚Â· Lahore</div>
+        </div>
+      </div>
+      <div class="qr-code-area">
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://qasimkhanfaridi.github.io/demoforGIGA/property4.html&color=7c2d12&bgcolor=ffffff&ecc=H&margin=1"
+          alt="QR Code Ã¢â‚¬â€œ Villa D-15"
+        />
+      </div>
+      <div class="qr-card-footer">
+        <span class="status-badge badge-green"><span class="dot"></span>Fully Registered</span>
+        <div style="font-size:11px;color:#64748b">1 Kanal Ã‚Â· Luxury Villa Ã‚Â· DHA Ph.8</div>
+        <div style="font-size:11px;color:#64748b;margin-top:2px">Ã°Å¸â€™Â° PKR 8.5 Cr Ã‚Â· Fully Paid</div>
+        <a href="property4.html" class="open-btn" style="--btn-from:#7c2d12;--btn-to:#dc2626">Ã°Å¸â€â€” Open Property Page</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Instructions -->
+  <div class="section-title">Ã°Å¸â€œâ€“ How It Works</div>
+  <div class="how-card">
+    <div style="font-size:14px;font-weight:700;color:#f1f5f9">Client Experience Ã¢â‚¬â€œ 3 Simple Steps</div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <div class="s-title">Receive QR Code</div>
+          <div class="s-desc">Client receives their unique QR code via print, email, WhatsApp, or business card</div>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <div class="s-title">Scan with Phone Camera</div>
+          <div class="s-desc">Open the phone camera, point at the QR code Ã¢â‚¬â€ no app needed</div>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <div class="s-title">View Full Property Details</div>
+          <div class="s-desc">Instantly see owner info, possession status, payments, location, legal docs & timeline</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  PrimeEstate Developers Pvt. Ltd. | Demo Portal<br/>
+  4 QR Codes Ã‚Â· 4 Properties Ã‚Â· 3 Cities | Built Oct 2026
+</div>
+
+</body>
+</html>
+
+

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Property Details – Villa D-15</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; color: #1a202c; }
+    .topbar { background: linear-gradient(135deg, #7c2d12, #dc2626); color: white; padding: 16px 24px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+    .topbar .logo { font-size: 26px; }
+    .topbar .brand { font-size: 18px; font-weight: 700; }
+    .topbar .sub { font-size: 12px; opacity: 0.8; }
+    .hero { background: linear-gradient(135deg, #7c2d12, #b91c1c); color: white; padding: 30px 24px 60px; text-align: center; }
+    .hero .badge { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 20px; padding: 4px 14px; font-size: 12px; margin-bottom: 12px; }
+    .hero h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+    .hero p { font-size: 14px; opacity: 0.85; }
+    .status-pill { display: inline-flex; align-items: center; gap: 6px; background: #22c55e; color: white; border-radius: 20px; padding: 5px 14px; font-size: 13px; font-weight: 600; margin-top: 14px; }
+    .status-pill .dot { width: 8px; height: 8px; background: white; border-radius: 50%; animation: blink 1.2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .content { padding: 20px 16px; margin-top: -30px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); }
+    .card-title { font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .info-item label { display: block; font-size: 11px; color: #94a3b8; font-weight: 600; margin-bottom: 3px; }
+    .info-item span { font-size: 15px; font-weight: 700; color: #1e293b; }
+    .info-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row .key { font-size: 13px; color: #64748b; }
+    .info-row .val { font-size: 14px; font-weight: 600; color: #1e293b; text-align: right; }
+    .map-placeholder { background: linear-gradient(135deg, #fee2e2, #fecaca); border-radius: 12px; height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #7c2d12; font-weight: 600; margin-bottom: 10px; }
+    .map-icon { font-size: 36px; }
+    .amenities { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .amenity { display: flex; align-items: center; gap: 8px; background: #f8fafc; border-radius: 10px; padding: 10px 12px; }
+    .amenity .a-icon { font-size: 20px; }
+    .amenity .a-text { font-size: 12px; font-weight: 600; color: #374151; }
+    .timeline { padding: 8px 0; }
+    .timeline-item { display: flex; gap: 14px; margin-bottom: 16px; }
+    .timeline-left { display: flex; flex-direction: column; align-items: center; }
+    .timeline-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
+    .timeline-dot.done { background: #22c55e; }
+    .timeline-dot.pending { background: #e2e8f0; border: 2px solid #94a3b8; }
+    .timeline-line { width: 2px; flex: 1; background: #e2e8f0; margin-top: 4px; }
+    .timeline-right .t-title { font-size: 13px; font-weight: 600; color: #1e293b; }
+    .timeline-right .t-date { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+    .timeline-right .t-badge { display: inline-block; margin-top: 4px; font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+    .t-badge.done { background: #dcfce7; color: #16a34a; }
+    .t-badge.pending { background: #f1f5f9; color: #64748b; }
+    .contact-btn { display: block; width: 100%; background: linear-gradient(135deg, #7c2d12, #dc2626); color: white; padding: 15px; text-align: center; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 15px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(185,28,28,0.4); }
+    .doc-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+    .doc-item:last-child { border-bottom: none; }
+    .doc-icon { font-size: 22px; }
+    .doc-info .doc-name { font-size: 13px; font-weight: 600; }
+    .doc-info .doc-date { font-size: 11px; color: #94a3b8; }
+    .doc-status { margin-left: auto; font-size: 11px; font-weight: 600; background: #dcfce7; color: #16a34a; padding: 3px 8px; border-radius: 10px; }
+    .footer { text-align: center; font-size: 11px; color: #94a3b8; padding: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">🏢</div>
+  <div>
+    <div class="brand">PrimeEstate Developers</div>
+    <div class="sub">Official Property Portal</div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="badge">🔍 Property Allotment Certificate</div>
+  <h1>Villa No. D-15</h1>
+  <p>Prestige Villas, DHA Phase 8, Lahore</p>
+  <div class="status-pill"><span class="dot"></span> Fully Possessed & Registered</div>
+</div>
+
+<div class="content">
+
+  <!-- Owner Info -->
+  <div class="card">
+    <div class="card-title"><span>👤</span> Owner Information</div>
+    <div class="info-grid">
+      <div class="info-item"><label>Full Name</label><span>Dr. Farrukh Iqbal</span></div>
+      <div class="info-item"><label>CNIC</label><span>35301-XXXXX-5</span></div>
+      <div class="info-item"><label>Member ID</label><span>PED-2022-0003</span></div>
+      <div class="info-item"><label>Phone</label><span>+92 311 222 9900</span></div>
+    </div>
+  </div>
+
+  <!-- Property Details -->
+  <div class="card">
+    <div class="card-title"><span>🏰</span> Property Details</div>
+    <div class="info-row"><span class="key">Villa Number</span><span class="val">D-15</span></div>
+    <div class="info-row"><span class="key">Plot Size</span><span class="val">1 Kanal (505.86 sq.yd)</span></div>
+    <div class="info-row"><span class="key">Covered Area</span><span class="val">4,800 sq.ft (5 Bed)</span></div>
+    <div class="info-row"><span class="key">Type</span><span class="val">Luxury Villa – Fully Furnished</span></div>
+    <div class="info-row"><span class="key">Block / Phase</span><span class="val">Block D, DHA Phase 8</span></div>
+    <div class="info-row"><span class="key">Facing</span><span class="val">North (50 ft boulevard)</span></div>
+    <div class="info-row"><span class="key">Garage</span><span class="val">2-Car Covered Garage</span></div>
+  </div>
+
+  <!-- Financial -->
+  <div class="card">
+    <div class="card-title"><span>💰</span> Financial Summary</div>
+    <div class="info-row"><span class="key">Total Price</span><span class="val">PKR 8,50,00,000</span></div>
+    <div class="info-row"><span class="key">Amount Paid</span><span class="val" style="color:#16a34a">PKR 8,50,00,000 ✅</span></div>
+    <div class="info-row"><span class="key">Outstanding</span><span class="val" style="color:#16a34a">PKR 0 (Fully Cleared)</span></div>
+    <div class="info-row"><span class="key">Payment Mode</span><span class="val">Bank Transfer + Cheque</span></div>
+    <div class="info-row"><span class="key">Completion Date</span><span class="val">Aug 2022</span></div>
+  </div>
+
+  <!-- Amenities -->
+  <div class="card">
+    <div class="card-title"><span>✨</span> Villa Amenities</div>
+    <div class="amenities">
+      <div class="amenity"><span class="a-icon">🏊</span><span class="a-text">Private Pool</span></div>
+      <div class="amenity"><span class="a-icon">🌳</span><span class="a-text">Landscaped Garden</span></div>
+      <div class="amenity"><span class="a-icon">🏋️</span><span class="a-text">Home Gym</span></div>
+      <div class="amenity"><span class="a-icon">🔒</span><span class="a-text">24/7 Security</span></div>
+      <div class="amenity"><span class="a-icon">☀️</span><span class="a-text">Solar System</span></div>
+      <div class="amenity"><span class="a-icon">🚘</span><span class="a-text">2 Car Parking</span></div>
+      <div class="amenity"><span class="a-icon">🛗</span><span class="a-text">Home Elevator</span></div>
+      <div class="amenity"><span class="a-icon">🌡️</span><span class="a-text">Central HVAC</span></div>
+    </div>
+  </div>
+
+  <!-- Location -->
+  <div class="card">
+    <div class="card-title"><span>📍</span> Location</div>
+    <div class="map-placeholder">
+      <div class="map-icon">🗺️</div>
+      <div>Prestige Villas – DHA Phase 8, Lahore</div>
+    </div>
+    <div class="info-row"><span class="key">City</span><span class="val">Lahore, Punjab</span></div>
+    <div class="info-row"><span class="key">Nearby Landmark</span><span class="val">3 min from Packages Mall</span></div>
+    <div class="info-row"><span class="key">GPS Coordinates</span><span class="val">31.4726° N, 74.3986° E</span></div>
+  </div>
+
+  <!-- Documents -->
+  <div class="card">
+    <div class="card-title"><span>📄</span> Legal Documents</div>
+    <div class="doc-item">
+      <span class="doc-icon">📋</span>
+      <div class="doc-info"><div class="doc-name">Allotment Letter</div><div class="doc-date">Issued: Sep 10, 2022</div></div>
+      <span class="doc-status">✅ Issued</span>
+    </div>
+    <div class="doc-item">
+      <span class="doc-icon">🏠</span>
+      <div class="doc-info"><div class="doc-name">Possession Certificate</div><div class="doc-date">Issued: Oct 01, 2022</div></div>
+      <span class="doc-status">✅ Issued</span>
+    </div>
+    <div class="doc-item">
+      <span class="doc-icon">📜</span>
+      <div class="doc-info"><div class="doc-name">Property Deed / Registry</div><div class="doc-date">Registered: Nov 15, 2022</div></div>
+      <span class="doc-status">✅ Registered</span>
+    </div>
+    <div class="doc-item">
+      <span class="doc-icon">🏛️</span>
+      <div class="doc-info"><div class="doc-name">NOC – DHA</div><div class="doc-date">Approved: Aug 20, 2022</div></div>
+      <span class="doc-status">✅ Approved</span>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="card">
+    <div class="card-title"><span>📋</span> Process Timeline</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-left"><div class="timeline-dot done"></div><div class="timeline-line"></div></div>
+        <div class="timeline-right"><div class="t-title">Booking & Agreement</div><div class="t-date">Jan 2022</div><div class="t-badge done">Completed</div></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-left"><div class="timeline-dot done"></div><div class="timeline-line"></div></div>
+        <div class="timeline-right"><div class="t-title">Full Payment Cleared</div><div class="t-date">Aug 2022</div><div class="t-badge done">Completed</div></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-left"><div class="timeline-dot done"></div><div class="timeline-line"></div></div>
+        <div class="timeline-right"><div class="t-title">Possession Handed Over</div><div class="t-date">Oct 01, 2022</div><div class="t-badge done">Completed</div></div>
+      </div>
+      <div class="timeline-item" style="margin-bottom:0">
+        <div class="timeline-left"><div class="timeline-dot done"></div></div>
+        <div class="timeline-right"><div class="t-title">Registry Completed</div><div class="t-date">Nov 15, 2022</div><div class="t-badge done">Completed</div></div>
+      </div>
+    </div>
+  </div>
+
+  <a href="tel:+921234567890" class="contact-btn">📞 Contact Our Office</a>
+
+  <div class="footer">
+    PrimeEstate Developers Pvt. Ltd. | Verified Portal<br/>
+    Document ID: PED-D015-2022 | Generated: Oct 2026
+  </div>
+</div>
+
+</body>
+</html>
