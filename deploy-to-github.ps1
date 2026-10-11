@@ -1,4 +1,4 @@
-Write-Host ""
+﻿Write-Host ""
 Write-Host "============================================" -ForegroundColor Cyan
 Write-Host "  PrimeEstate Portal - GitHub Pages Deploy" -ForegroundColor Cyan
 Write-Host "============================================" -ForegroundColor Cyan
@@ -75,3 +75,4 @@ Write-Host ""
 Write-Host "NOTE: GitHub Pages takes ~2 minutes to go live." -ForegroundColor Yellow
 Write-Host ""
 Start-Process $baseUrl
+
